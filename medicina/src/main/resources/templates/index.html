@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Notas - Med</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-4 mb-5" style="max-width: 600px;">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="text-center mb-1"> Calculadora de Notas</h3>
+            <h6 class="text-center text-muted mb-4">(Nova Matriz UNIDERP)</h6>
+
+            <div th:if="${status}" class="alert alert-info text-center shadow-sm">
+                <h5 th:text="${resultado}"></h5>
+                <p class="mb-2 fw-bold" th:text="${status}"></p>
+                <hr>
+                <small>Sua Média iRAT: <span th:text="${mediaIrat}"></span> | Sua Média gRAT: <span th:text="${mediaGrat}"></span></small>
+            </div>
+
+            <form action="/calcular" method="post">
+                <div class="mb-4 p-3 bg-white border rounded">
+                    <label class="form-label fw-bold">Selecione uma opção:</label>
+                    <select class="form-select border-primary" name="opcao" id="opcao" required onchange="mudarFormulario()">
+                        <option value="1">1. Calcular Média Final (já tenho todas as notas)</option>
+                        <option value="2">2. Descobrir quanto preciso tirar na Prova Teórica</option>
+                    </select>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label fw-bold text-secondary">PBL (0 a 10)</label>
+                        <input type="number" step="0.01" class="form-control" name="pbl">
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <label class="form-label fw-bold text-primary">Notas iRAT</label>
+                        <div id="container-irat" class="d-flex flex-wrap gap-2">
+                            <input type="number" step="0.01" class="form-control w-auto flex-grow-1" name="irats" placeholder="Nota 1">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="adicionarCampo('container-irat', 'irats')">+ Adicionar iRAT</button>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <label class="form-label fw-bold text-success">Notas gRAT</label>
+                        <div id="container-grat" class="d-flex flex-wrap gap-2">
+                            <input type="number" step="0.01" class="form-control w-auto flex-grow-1" name="grats" placeholder="Nota 1">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-success mt-2" onclick="adicionarCampo('container-grat', 'grats')">+ Adicionar gRAT</button>
+                    </div>
+
+                    <div class="col-6 mt-4">
+                        <label class="form-label fw-bold text-secondary">LMF (0 a 10)</label>
+                        <input type="number" step="0.01" class="form-control" name="lmf">
+                    </div>
+
+                    <div class="col-6 mt-4">
+                        <label class="form-label fw-bold text-secondary">LPI (0 a 10)</label>
+                        <input type="number" step="0.01" class="form-control" name="lpi">
+                    </div>
+
+                    <div class="col-12 mt-4" id="divTeorica">
+                        <label class="form-label fw-bold text-danger">Prova Teórica (0 a 10)</label>
+                        <input type="number" step="0.01" class="form-control border-danger" name="teorica">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-4 fs-5 fw-bold shadow-sm">Calcular Notas</button>
+            </form>
+
+            <p class="text-center mt-4 mb-0"><small>Desenvolvido por <a href="https://instagram.com/reis_mth" target="_blank" class="text-decoration-none">@reis_mth</a></small></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function mudarFormulario() {
+        var opcao = document.getElementById("opcao").value;
+        var divTeorica = document.getElementById("divTeorica");
+        if (opcao === "2") { divTeorica.style.display = "none"; }
+        else { divTeorica.style.display = "block"; }
+    }
+
+    // Função que cria novos inputs na tela
+    function adicionarCampo(containerId, nomeCampo) {
+        var container = document.getElementById(containerId);
+        var qtdAtual = container.getElementsByTagName('input').length;
+
+        var novoInput = document.createElement('input');
+        novoInput.type = 'number';
+        novoInput.step = '0.01';
+        novoInput.className = 'form-control w-auto flex-grow-1 mt-2';
+        novoInput.name = nomeCampo;
+        novoInput.placeholder = 'Nota ' + (qtdAtual + 1);
+
+        container.appendChild(novoInput);
+    }
+</script>
+</body>
+</html>
